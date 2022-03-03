@@ -1,0 +1,2 @@
+#!/bin/bash
+mvn clean package exec:java -Dexec.mainClass="org.sample.toy.Toy" -Dexec.args=""
