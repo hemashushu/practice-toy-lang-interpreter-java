@@ -4,11 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class ToyTest
-{
+public class ToyTest {
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void shouldAnswerWithTrue() {
+        assertTrue(true);
     }
 }
