@@ -1,24 +1,75 @@
 package org.sample.toy;
 
+import java.util.List;
+
 // 注：
 // 书中采用 Visitor 模式解藕各个 *Expr 的处理程序
 // 处理程序需要实现 Expr.Visitor<T> 接口，其中 T 为期望
 // 输出的数据。
 // 实际上不采用设计模式，直接写也是可以的，追踪调试时更简单明了
-class Interpreter implements Expr.Visitor<Object> {
+class Interpreter implements Expr.Visitor<Object>,
+        Stmt.Visitor<Void> {
 
-    // 解析器入口
-    private Object evaluate(Expr expr) {
-        return expr.accept(this);
-    }
+    private Environment environment = new Environment();
 
-    void interpret(Expr expression) {
+    // void interpret(Expr expression) {
+    // try {
+    // Object value = evaluate(expression);
+    // System.out.println(stringify(value));
+    // } catch (RuntimeError error) {
+    // Toy.runtimeError(error);
+    // }
+    // }
+
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             Toy.runtimeError(error);
         }
+    }
+
+    // statement 解析入口
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+        if (stmt.initializer != null) {
+            value = evaluate(stmt.initializer);
+        }
+
+        environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    // expression 解析入口
+    private Object evaluate(Expr expr) {
+        return expr.accept(this);
     }
 
     @Override
@@ -99,6 +150,11 @@ class Interpreter implements Expr.Visitor<Object> {
 
         // Unreachable.
         return null;
+    }
+
+    @Override
+    public Object visitVariableExpr(Expr.Variable expr) {
+        return environment.get(expr.name);
     }
 
     private void checkNumberOperand(Token operator, Object operand) {

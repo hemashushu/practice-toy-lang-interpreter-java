@@ -1,5 +1,8 @@
 package org.sample.toy;
 
+import org.sample.toy.Expr.Assign;
+import org.sample.toy.Expr.Variable;
+
 // 注：
 // 书中采用 Visitor 模式解藕各个 *Expr 的处理程序
 // 处理程序需要实现 Expr.Visitor<T> 接口，其中 T 为期望
@@ -61,5 +64,17 @@ class AstPrinter implements Expr.Visitor<String> {
                         new Expr.Literal(45.67)));
 
         System.out.println(new AstPrinter().print(expression));
+    }
+
+    @Override
+    public String visitVariableExpr(Variable expr) {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public String visitAssignExpr(Assign expr) {
+        // TODO
+        return null;
     }
 }
