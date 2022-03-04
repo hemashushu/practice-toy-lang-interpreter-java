@@ -1,0 +1,2 @@
+#!/bin/bash
+mvn clean package exec:java -Dexec.mainClass="org.sample.tool.GenerateAst" -Dexec.args="src/main/java/org/sample/toy"

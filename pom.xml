@@ -82,9 +82,9 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <mainClass>org.sample.toy.Toy</mainClass>
                         <!-- optional -->
                         <!--
+                        <mainClass>org.sample.toy.Toy</mainClass>
                         <arguments>
                             <argument>argument1</argument>
                         </arguments>
